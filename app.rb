@@ -30,7 +30,31 @@ def authenticate!
 end
 
 get '/' do
+  @meetups = Meetup.all
   erb :index
+end
+
+
+get '/create' do
+  erb :create
+end
+
+post '/create' do
+  require 'pry'
+  meetup = Meetup.create(
+  title: params[:title],
+  description: params[:description],
+  location: params[:location],
+  start_date: params[:start_date],
+  start_time: params[:start_time],
+  created_by: current_user.id )
+  redirect "/meetups/#{meetup.id}"
+end
+
+get '/meetups/:id' do
+  @meetup = Meetup.find_by id: params[:id]
+  @user = User.find_by id: @meetup.created_by
+  erb :show_meetup
 end
 
 get '/auth/github/callback' do

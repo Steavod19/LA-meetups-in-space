@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meetups</title>
+  <link rel="stylesheet" href="/stylesheets/normalize.css" />
+  <link rel="stylesheet" href="/stylesheets/app.css" />
+</head>
+
+<h1><%= "New Meetup" %></h1>
+
+
+<form method="post" action="/create" style="color:#000">
+  <p>Title: <input type="text" name="title"></p>
+  <p>Description: <input style="height: 300px; width: 300px;" type="text" name="description"></p>
+  <p>Location: <input type="text" name="location"></p>
+  <p> Date: <input type="date" name="start_date"></p>
+  <p>Time: <input type="time" name="start_time"></p>
+  <br><br>
+  <input type="submit" name="submit_to_meetups_table" value="Submit">
+</form>
