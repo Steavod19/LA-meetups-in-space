@@ -36,6 +36,7 @@ end
 
 
 get '/create' do
+  authenticate!
   erb :create
 end
 
@@ -48,12 +49,25 @@ post '/create' do
   start_date: params[:start_date],
   start_time: params[:start_time],
   created_by: current_user.id )
+  flash[:notice] = "You've created a new meetup!"
+
   redirect "/meetups/#{meetup.id}"
 end
+
+post '/delete' do
+  meetup_id = params[:meetup]
+  attendee = Attendee.find_by(user_id: current_user.id, meetup_id: meetup_id)
+  attendee.destroy
+  flash[:notice] = "You Left the Meetup"
+  redirect "/meetups/#{meetup_id}"
+
+end
+
 
 get '/meetups/:id' do
   @meetup = Meetup.find_by id: params[:id]
   @user = User.find_by id: @meetup.created_by
+  @comments = Comment.order('created_at DESC').where meetup_id: params[:id]
   erb :show_meetup
 end
 
@@ -61,8 +75,22 @@ post '/add_attendee' do
   Attendee.create(
   user_id: current_user.id,
   meetup_id: params[:meetup])
+  flash[:notice] = "You've joined a meetup!"
+
   redirect "/meetups/#{params[:meetup]}"
 end
+
+post '/comment' do
+  Comment.create(
+  title: params[:title],
+  comment: params[:comment],
+  meetup_id: params[:meetup],
+  user_id: current_user.id
+  )
+  redirect "/meetups/#{params[:meetup]}"
+
+end
+
 
 get '/auth/github/callback' do
   auth = env['omniauth.auth']
