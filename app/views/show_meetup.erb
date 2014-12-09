@@ -10,28 +10,29 @@
 
 <title><%= @meetup.title %></title>
 
-<input type="submit" name="join_meetup" value="Join">
+<p>
+  <% unless @meetup.users.include?(current_user)%>
+  <form method="post" action="/add_attendee">
+    <input name="meetup" value="<%= @meetup.id %>" hidden>
+    <input type="submit" value="Join Meetup">
+  </form>
+</p>
+<%end%>
 
 
 <h3><%= @meetup.title %></h3>
-<p>
-  Date: <%= @meetup.start_date %>
-</p>
-
-<p>
-  Time: <%= @meetup.start_time %>
-</p>
+<p>Date: <%= @meetup.start_date %></p>
+<p>Time: <%= @meetup.start_time %></p>
+<p>Created By: <%= @user.username %></p>
+<p>Location: <%= @meetup.location %></p>
+<p>Description: <%= @meetup.description %></p>
 
 
-<p>
-  Created By: <%= @user.username %>
-</p>
 
 
-<p>
-  Location: <%= @meetup.location %>
-</p>
+<p>Attendees:</p>
 
-<p>
-  Description: <%= @meetup.description %>
-</p>
+  <% @meetup.users.each do |user| %>
+  <p><img src="<%= user.avatar_url %>" width="100" hieght="100"></p>
+  <p><%= user.username %></p>
+  <% end %>
